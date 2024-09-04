@@ -25,6 +25,16 @@ public class Cube_Editor : Editor
 
         var size = serializedObject.FindProperty("size");
 
+        if (GUI.changed)
+        {
+            foreach (var cube in GameObject.FindObjectsOfType<Cube>(true))
+            {
+                Undo.RecordObject(cube.gameObject, "Size Cube Objects");
+                Undo.RecordObject(cube.transform, "Size Cube Transforms");
+                cube.gameObject.transform.localScale = size.floatValue * Vector3.one;
+            }
+        }
+
         if (size.floatValue < 1f)
             EditorGUILayout.HelpBox("The cubes' sizes cannot be smaller than 1", MessageType.Warning);
         if (size.floatValue > 2f)
@@ -36,7 +46,7 @@ public class Cube_Editor : Editor
         {
             var allCubeBehaviors = FindObjectsOfType<Cube>();
             var allCubeGOs = allCubeBehaviors
-                .Select(enemy => enemy.gameObject)
+                .Select(cube => cube.gameObject)
                 .ToArray();
             Selection.objects = allCubeGOs;
         }
@@ -52,15 +62,16 @@ public class Cube_Editor : Editor
 
         if (GUILayout.Button("Disable/Enable all enemy", GUILayout.Height(40)))
         {
-            foreach (var enemy in GameObject.FindObjectsOfType<Cube>(true))
+            foreach (var cube in GameObject.FindObjectsOfType<Cube>(true))
             {
-                Undo.RecordObject(enemy.gameObject, "Disable/Enable enemy");
-                enemy.gameObject.SetActive(!SelectedIsEnabled);
+                Undo.RecordObject(cube.gameObject, "Disable/Enable Cubes");
+                cube.gameObject.SetActive(!SelectedIsEnabled);
             }
             
         }
 
         GUI.backgroundColor = defaultColor;
+
     }
 }
 
