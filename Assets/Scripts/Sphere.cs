@@ -25,6 +25,17 @@ public class Sphere_Editor : Editor
 
         var size = serializedObject.FindProperty("size");
 
+        if (GUI.changed)
+        {
+            foreach (var cube in GameObject.FindObjectsOfType<Sphere>(true))
+            {
+                Undo.RecordObject(cube.transform, "Size Cube Transforms");
+                Undo.RecordObject(cube.GetComponent<Sphere>(), "Size Sphere Spheres");
+                cube.GetComponent<Sphere>().size = size.floatValue;
+                cube.gameObject.transform.localScale = size.floatValue * Vector3.one;
+            }
+        }
+
         if (size.floatValue < 1f)
             EditorGUILayout.HelpBox("The spheres' sizes cannot be smaller than 1", MessageType.Warning);
         if (size.floatValue > 2f)

@@ -29,8 +29,9 @@ public class Cube_Editor : Editor
         {
             foreach (var cube in GameObject.FindObjectsOfType<Cube>(true))
             {
-                Undo.RecordObject(cube.gameObject, "Size Cube Objects");
                 Undo.RecordObject(cube.transform, "Size Cube Transforms");
+                Undo.RecordObject(cube.GetComponent<Cube>(), "Size Cube Cubes");
+                cube.GetComponent<Cube>().size = size.floatValue;
                 cube.gameObject.transform.localScale = size.floatValue * Vector3.one;
             }
         }
